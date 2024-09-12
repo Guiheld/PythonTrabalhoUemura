@@ -105,15 +105,17 @@ def criar_tarefa(request):
 
 @login_required(login_url='/auth/login/')
 def atualizar_tarefa(request, tarefa_id):
-    tarefa = get_object_or_404(Tarefas, id=tarefa_id, usuarios=request.user)
+    usuario = Usuarios.objects.get(id_usuario=request.user.id)
+    tarefa = get_object_or_404(Tarefas, id=tarefa_id, tarefa_atribuida=usuario)
     if request.method == 'POST':
         form = Formulario_de_tarefas(request.POST, instance=tarefa)
         if form.is_valid():
             form.save()
-            return redirect('definir_tarefa')
-        else:
-            form = Formulario_de_tarefas()
-            return render(request, 'tarefas/formulario_tarefa.html', {'form': form})
+            return redirect('definir_tarefas')
+    else:
+        form = Formulario_de_tarefas(instance=tarefa)
+
+    return render(request, 'formulario_tarefas.html', {'form': form})
 
 
 @login_required(login_url='/auth/login/')
