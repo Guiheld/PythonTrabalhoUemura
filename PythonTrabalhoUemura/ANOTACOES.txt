@@ -1,0 +1,31 @@
+
+PARA CRIAR NOVA PAGINA/FUNÇÂO
+
+    1. DECLARAR URL NA ROTA, EM urls.py
+    2. O QUE ACONTECE NA URL, EM views.py
+    3. O QUE MOSTRAR (HTML)
+
+
+MIGRATIONS / BANCO DE DADOS
+
+    superuser --> heldg / azevedodeheld@gmail.com / 123
+
+    MODELS - OBJETOS PYTHON QUE REPRESENTAM UMA TABELA NO BANCO DE DADOS
+    TRANSFORMAR EM CÓDIGO SQL
+    IRÁ CRIAR ESSAS TABELAS DENTRO DO BANCO DE DADOS
+
+    1. CRIAR "FORMATO" NO models.py
+    2. RODAR COMANDO --> " .\manage.py makemigrations " CRIA ARQUIVO EM migrations
+    3. RODAR COMANDO --> " .\manage.py migrate "
+
+    views.py --> EXEMPLO PARA LISTAR USUARIOS
+        novo_usuario = Usuarios()
+        novo_usuario.nome = request.POST.get(`nome`)
+        novo_usuario.nome = request.POST.get(`email`)
+        novo_usuario.nome = request.POST.get(`senha`)
+        novo_usuario.save()
+        usuarios = {
+            `usuarios`: Usuarios.objects.all()
+        }
+        - envia para o html -
+
