@@ -60,7 +60,7 @@ def login_view(request):
 
 
 @login_required(login_url='/auth/login/')
-def plataforma(request):
+def dashboard(request):
     return HttpResponse('plataforma')
 
 #----------------------------------------------------------------------------------------------------

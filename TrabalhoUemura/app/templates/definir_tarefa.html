@@ -1,21 +1,172 @@
 {% block content %}
-  <h2>Minhas Tarefas</h2>
-  <a href="{% url 'criar_tarefa' %}">Criar nova tarefa</a>
-  <ul>
-    {% for tarefa in tarefas %}
-      <li>
-        <strong>{{ tarefa.titulo }}</strong> - {{ tarefa.get_status_display }} - 
-        Responsável: 
-        {% if tarefa.responsavel %}
-          {{ tarefa.responsavel.username }}
-        {% else %}
-          Ninguém
-        {% endif %}
-        <a href="{% url 'atualizar_tarefa' tarefa.id %}">Editar</a> |
-        <a href="{% url 'deletar_tarefa' tarefa.id %}">Excluir</a>
-      </li>
-    {% empty %}
-      <li>Não há tarefas para mostrar.</li>
-    {% endfor %}
-  </ul>
+  <div class="container">
+    <div class="header">
+      <h2>Minhas Tarefas</h2>
+      <div class="header-actions">
+        <a href="{% url 'dashboard' %}" class="btn btn-dashboard">Dashboard</a>
+        <a href="{% url 'criar_tarefa' %}" class="btn btn-create">Criar nova tarefa</a>
+      </div>
+    </div>
+
+    <div class="task-list">
+      {% for tarefa in tarefas %}
+        <div class="task-card">
+          <div class="task-header">
+            <strong>{{ tarefa.titulo }}</strong>
+            <span class="status {{ tarefa.status }}">{{ tarefa.get_status_display }}</span>
+          </div>
+          <div class="task-body">
+            <p>{{ tarefa.descricao }}</p>
+            <p><strong>Responsável:</strong> {{ tarefa.tarefa_atribuida }}</p>
+          </div>
+          <div class="task-footer">
+            <button class="btn btn-edit" onclick="window.location.href='{% url 'atualizar_tarefa' tarefa.id %}'">Editar</button>
+            <button class="btn btn-delete" onclick="window.location.href='{% url 'deletar_tarefa' tarefa.id %}'">Excluir</button>
+          </div>
+        </div>
+      {% empty %}
+        <div class="no-tasks">
+          Não há tarefas para mostrar.
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <style>
+    .container {
+      width: 80%;
+      margin: 0 auto;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .header h2 {
+      margin: 0;
+      color: #333;
+    }
+
+    .header-actions .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-decoration: none;
+      color: #fff;
+      font-weight: bold;
+      transition: background-color 0.3s;
+    }
+
+    .btn-dashboard {
+      background-color: #6c757d;
+    }
+
+    .btn-dashboard:hover {
+      background-color: #5a6268;
+    }
+
+    .btn-create {
+      background-color: #007bff;
+    }
+
+    .btn-create:hover {
+      background-color: #0056b3;
+    }
+
+    .task-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .task-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      width: calc(50% - 20px);
+      box-sizing: border-box;
+      transition: box-shadow 0.3s;
+    }
+
+    .task-card:hover {
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .task-header .status {
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: #fff;
+    }
+
+    .status.pendente {
+      background-color: #ffc107;
+    }
+
+    .status.andamento {
+      background-color: #17a2b8;
+    }
+
+    .status.concluida {
+      background-color: #28a745;
+    }
+
+    .task-body {
+      margin-bottom: 15px;
+    }
+
+    .task-footer {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      border-radius: 5px;
+      border: none;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      text-align: center;
+    }
+
+    .btn-edit {
+      background-color: #007bff;
+    }
+
+    .btn-edit:hover {
+      background-color: #0056b3;
+    }
+
+    .btn-delete {
+      background-color: #dc3545;
+    }
+
+    .btn-delete:hover {
+      background-color: #c82333;
+    }
+
+    .no-tasks {
+      text-align: center;
+      font-size: 1.2em;
+      color: #888;
+    }
+  </style>
 {% endblock %}
