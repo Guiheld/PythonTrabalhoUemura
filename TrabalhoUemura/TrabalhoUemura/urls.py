@@ -23,10 +23,15 @@ from django.contrib import admin
 from django.urls import path, include
 from app import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('auth/cadastro/', views.cadastro, name='cadastro'),
     path('auth/login/', views.login, name='login'),
-    path('plataforma', views.plataforma, name='plataforma')
+    path('plataforma', views.plataforma, name='plataforma'),
+    path('tarefas/', views.definir_tarefa, name='definir_tarefas'),
+    path('tarefas/criar/', views.criar_tarefa, name='criar_tarefa'),
+    path('tarefas/atualizar/<int:tarefa_id>/', views.atualizar_tarefa, name='atualizar_tarefa'),
+    path('tarefas/deletar/<int:tarefa_id>/', views.deletar_tarefa, name='deletar_tarefa'),
 ]
