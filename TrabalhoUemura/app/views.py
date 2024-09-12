@@ -88,7 +88,11 @@ def criar_tarefa(request):
         form = Formulario_de_tarefas(request.POST)
         if form.is_valid():
             tarefa = form.save(commit=False)
-            tarefa.entrada_tarefa = request.user  # Atribui o usuário que está criando a tarefa
+            try:
+                usuario = Usuarios.objects.get(id_usuario=request.user.id)
+            except Usuarios.DoesNotExist:
+                usuario = None
+            tarefa.entrada_tarefa = usuario
             tarefa.save()
             return redirect('definir_tarefas')
     else:
