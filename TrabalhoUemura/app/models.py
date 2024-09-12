@@ -1,5 +1,6 @@
 from random import choice
 
+from django.contrib.auth.models import User
 from django.db import models
 
 # ANOTAÇÕES - Guilherme
@@ -10,11 +11,18 @@ from django.db import models
 
 from django.db import models
 
+from django.contrib.auth.models import User
+from django.db import models
+
 class Usuarios(models.Model):
     id_usuario = models.AutoField(primary_key=True)
     nome = models.TextField(max_length=250)
     email = models.EmailField(max_length=250)
-    senha = models.CharField(max_length=100) # ARMAZENAR SENHA EM HASH
+    senha = models.CharField(max_length=100)  # ARMAZENAR SENHA EM HASH
+
+    def __str__(self):
+        return self.nome
+
 
 class Tarefas(models.Model):
 

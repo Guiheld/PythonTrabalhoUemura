@@ -1,10 +1,23 @@
-{% extends 'base.html' %}
-
 {% block content %}
   <h2>{% if form.instance.pk %}Editar Tarefa{% else %}Criar Tarefa{% endif %}</h2>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    <div>
+      <label for="{{ form.titulo.id_for_label }}">Título:</label>
+      {{ form.titulo }}
+    </div>
+    <div>
+      <label for="{{ form.descricao.id_for_label }}">Descrição:</label>
+      {{ form.descricao }}
+    </div>
+    <div>
+      <label for="{{ form.status.id_for_label }}">Status:</label>
+      {{ form.status }}
+    </div>
+    <div>
+      <label for="{{ form.tarefa_atribuida.id_for_label }}">Responsável:</label>
+      {{ form.tarefa_atribuida }}
+    </div>
     <button type="submit">Salvar</button>
   </form>
 {% endblock %}

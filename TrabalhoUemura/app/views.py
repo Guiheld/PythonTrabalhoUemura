@@ -1,11 +1,15 @@
-from django.contrib.auth import authenticate
-from django.contrib.auth import login as login_django
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import User
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Tarefas
+from .models import Tarefas, Usuarios
 from .formulario import Formulario_de_tarefas
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Tarefas
+from django.urls import reverse
 
 # ANOTAÇÕES - Guilherme
 # Arquivo responsável por definir as regras de negócio do app. Vulgo ACTION.
@@ -27,27 +31,30 @@ def cadastro(request):
         email = request.POST.get('email')
         senha = request.POST.get('senha')
 
-        # Verifica se nome de usuario ja esta em uso
-        if User.objects.filter(username=nome).exists():
-            return HttpResponse('Nome de usuario já existente')
+        # Verifica se nome de usuario já está em uso
+        if Usuarios.objects.filter(nome=nome).exists():
+            return HttpResponse('Nome de usuário já existente')
 
-        # Salva usuario
-        user = User.objects.create_user(username=nome, email=email, password=senha)
+        # Cria e salva o novo usuário
+        senha_hash = make_password(senha)  # Hash da senha
+        user = Usuarios(nome=nome, email=email, senha=senha_hash)
         user.save()
-        return HttpResponse('Usuario cadastrado com sucesso!')
-        return HttpResponse(nome)
+        return redirect('login')
 
 
-def login(request):
+def login_view(request):
     if request.method == 'GET':
         return render(request, 'auth/login.html')
     else:
-        email = request.POST.get('email')
+        nome = request.POST.get('nome')
         senha = request.POST.get('senha')
-        user = authenticate(email=email, password=senha)
-        if user:
-            login_django(request,user)
-            return HttpResponse('autentificado')
+        user = authenticate(username=nome, password=senha)
+        if user is not None:
+            login(request, user)
+            # Armazena o URL de destino na sessão
+            request.session['redirect_url'] = request.POST.get('next', reverse('definir_tarefas'))
+
+            return HttpResponseRedirect(request.session['redirect_url'])
         else:
             return HttpResponse('email ou senha invalidos')
 
@@ -61,8 +68,19 @@ def plataforma(request):
 
 @login_required(login_url='/auth/login/')
 def definir_tarefa(request):
-    tarefas = Tarefas.objects.filter(usuarios=request.user)
-    return render(request, 'tarefas/.html', {'tarefas': tarefas})
+    # Recupera o URL de destino da sessão se existir
+    redirect_url = request.session.pop('redirect_url', None)
+
+    usuario_id = request.user.id  # Obtém o ID do usuário logado
+    tarefas = Tarefas.objects.filter(entrada_tarefa=usuario_id)
+
+    # Pode usar o redirect_url se precisar redirecionar após a renderização
+    if redirect_url:
+        return HttpResponseRedirect(redirect_url)
+
+    return render(request, 'definir_tarefa.html/', {'tarefas': tarefas})
+
+
 
 @login_required(login_url='/auth/login/')
 def criar_tarefa(request):
@@ -70,13 +88,15 @@ def criar_tarefa(request):
         form = Formulario_de_tarefas(request.POST)
         if form.is_valid():
             tarefa = form.save(commit=False)
-            tarefa.usuario = request.user
+            tarefa.entrada_tarefa = request.user  # Atribui o usuário que está criando a tarefa
             tarefa.save()
+            return redirect('definir_tarefas')
+    else:
+        form = Formulario_de_tarefas()
+        # Popula o campo tarefa_atribuida com todos os usuários disponíveis
+        form.fields['tarefa_atribuida'].queryset = Usuarios.objects.all()
 
-            return redirect('definir_tarefa')
-        else:
-            form = Formulario_de_tarefas()
-            return render(request, 'tarefas/formulario_tarefa.html', {'form': form})
+    return render(request, 'formulario_tarefas.html', {'form': form})
 
 
 @login_required(login_url='/auth/login/')
