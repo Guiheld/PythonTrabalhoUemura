@@ -4,21 +4,22 @@
     <form method="post" class="task-form">
       {% csrf_token %}
       <div class="form-group">
-        <label for="{{ form.titulo.id_for_label }}">Título:</label>
+        <label for="{{ form.titulo.id_for_label }}">Título (*):</label>
         {{ form.titulo }}
       </div>
       <div class="form-group">
-        <label for="{{ form.descricao.id_for_label }}">Descrição:</label>
+        <label for="{{ form.descricao.id_for_label }}">Descrição (*):</label>
         {{ form.descricao }}
       </div>
       <div class="form-group">
-        <label for="{{ form.status.id_for_label }}">Status:</label>
+        <label for="{{ form.status.id_for_label }}">Status (*):</label>
         {{ form.status }}
       </div>
       <div class="form-group">
-        <label for="{{ form.tarefa_atribuida.id_for_label }}">Responsável:</label>
+        <label for="{{ form.tarefa_atribuida.id_for_label }}">Responsável (*):</label>
         {{ form.tarefa_atribuida }}
       </div>
+      <p class="observacao" align="left">Preencha os campos obrigatorios (*)</p>
       <div class="form-actions">
         <button type="submit" class="btn btn-save">Salvar</button>
         <a href="{% url 'definir_tarefas' %}" class="btn btn-cancel">Cancelar</a>
@@ -71,7 +72,7 @@
     }
 
     .form-group textarea {
-      resize: vertical;
+      resize: none;
     }
 
     .form-actions {
@@ -105,6 +106,11 @@
 
     .btn-cancel:hover {
       background-color: #5a6268;
+    }
+
+    .observacao {
+      color: #6c757d; /* Cor cinza discreta */
+      font-size: 0.9em;
     }
   </style>
 {% endblock %}

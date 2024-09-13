@@ -98,7 +98,7 @@ def criar_tarefa(request):
             tarefa.save()
             return redirect('definir_tarefas')
     else:
-        form = Formulario_de_tarefas()
+        form = Formulario_de_tarefas(request.POST)
         # Popula o campo tarefa_atribuida com todos os usuários disponíveis
         form.fields['tarefa_atribuida'].queryset = Usuarios.objects.all()
 

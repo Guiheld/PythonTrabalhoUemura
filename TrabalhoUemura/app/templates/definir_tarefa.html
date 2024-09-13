@@ -3,15 +3,33 @@
     <div class="header">
       <h2>Minhas Tarefas</h2>
       <div class="header-actions">
-        <a href="{% url 'dashboard' %}" class="btn btn-create">Dashboard</a>
         <a href="{% url 'criar_tarefa' %}" class="btn btn-create">Criar nova tarefa</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-create">Dashboard</a>
         <a href="{% url 'home' %}" class="btn btn-back">Sair</a>
       </div>
     </div>
-    <h4 align="center"> Bem vindo {{ usuario.nome }} !</h4>
+    <h4 align="center">Bem-vindo {{ usuario.nome }}!</h4>
+    <div class="filter-section">
+      <label for="status-filter">Filtrar por Status:</label>
+      <div class="dropdown" id="status-filter">
+        <button class="dropdown-btn">Escolha o Status</button>
+        <div class="dropdown-content">
+          <div class="dropdown-column">
+            <a href="#" data-value="">Todos</a>
+            <a href="#" data-value="pendente">Pendente</a>
+          </div>
+          <div class="dropdown-column">
+            <a href="#" data-value="andamento">Em Andamento</a>
+          </div>
+          <div class="dropdown-column">
+            <a href="#" data-value="concluida">Concluída</a>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="task-list">
       {% for tarefa in tarefas %}
-        <div class="task-card">
+        <div class="task-card" data-status="{{ tarefa.status }}">
           <div class="task-header">
             <strong>{{ tarefa.titulo }}</strong>
             <span class="status {{ tarefa.status }}">{{ tarefa.get_status_display }}</span>
@@ -35,12 +53,13 @@
   </div>
 
   <style>
+
     .container {
       width: 80%;
       margin: 0 auto;
       padding: 20px;
       font-family: Arial, sans-serif;
-      position: relative; /* Importante para o posicionamento absoluto */
+      position: relative;
     }
 
     .header {
@@ -97,7 +116,7 @@
       padding: 15px;
       width: calc(50% - 20px);
       box-sizing: border-box;
-      position: relative; /* Necessário para o posicionamento absoluto do <p> */
+      position: relative;
       display: flex;
       flex-direction: column;
     }
@@ -110,7 +129,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-
     }
 
     .task-header .status {
@@ -133,7 +151,7 @@
 
     .task-body {
       margin-bottom: 15px;
-      flex: 1; /* Permite que o conteúdo da tarefa se expanda */
+      flex: 1;
     }
 
     .task-footer {
@@ -187,8 +205,123 @@
       position: absolute;
       bottom: 10px;
       right: 10px;
-      color: #6c757d; /* Cor cinza discreta */
+      color: #6c757d;
       font-size: 0.9em;
     }
+
+    .filter-section {
+      margin-bottom: 20px;
+    }
+
+    .filter-section label {
+      margin-right: 10px;
+    }
+
+    .filter-section select {
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    .filter-section {
+      margin-bottom: 20px;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-btn {
+      padding: 5px 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+      background-color: #fff;
+      color: #333;
+      cursor: pointer;
+      font-size: 16px;
+      width: 200px;
+      text-align: left;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      background-color: #fff;
+      min-width: 200px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      z-index: 1;
+      top: 100%;
+      left: 0;
+      border-radius: 5px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .dropdown-column {
+      display: inline-block;
+      vertical-align: top;
+      width: 33%;
+      box-sizing: border-box;
+      padding: 10px;
+    }
+
+    .dropdown-column a {
+      display: block;
+      padding: 10px;
+      text-decoration: none;
+      color: #333;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .dropdown-column a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown-content.show {
+      display: block;
+    }
+
+    .dropdown-content .dropdown-column:last-child a {
+      border-bottom: none;
+    }
   </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const dropdownBtn = document.querySelector('.dropdown-btn');
+      const dropdownContent = document.querySelector('.dropdown-content');
+      const filterLinks = dropdownContent.querySelectorAll('a');
+      const taskCards = document.querySelectorAll('.task-card');
+
+      dropdownBtn.addEventListener('click', function () {
+        dropdownContent.classList.toggle('show');
+      });
+
+      filterLinks.forEach(link => {
+        link.addEventListener('click', function (e) {
+          e.preventDefault();
+          const selectedStatus = link.getAttribute('data-value');
+          dropdownBtn.textContent = link.textContent;
+
+          taskCards.forEach(card => {
+            const cardStatus = card.getAttribute('data-status');
+            if (selectedStatus === '' || selectedStatus === cardStatus) {
+              card.style.display = 'flex'; // Show the card
+            } else {
+              card.style.display = 'none'; // Hide the card
+            }
+          });
+
+          dropdownContent.classList.remove('show');
+        });
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!dropdownBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
+          dropdownContent.classList.remove('show');
+        }
+      });
+    });
+  </script>
 {% endblock %}
