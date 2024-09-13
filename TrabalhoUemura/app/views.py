@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
@@ -59,7 +60,8 @@ def login_view(request):
 
             return HttpResponseRedirect(request.session['redirect_url'])
         else:
-            return HttpResponse('email ou senha invalidos')
+            messages.error(request, 'Nome de usuário ou senha inválidos.')
+            return render(request, 'auth/login.html')
 
 
 @login_required(login_url='/auth/login/')

@@ -7,7 +7,7 @@
         <style>
             body {
                 font-family: 'Roboto', sans-serif;
-                background-color: #f0f0f0; /* Mesma cor de fundo da página de cadastro */
+                background-color: #f0f0f0;
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -18,7 +18,7 @@
                 background-color: #fff;
                 padding: 40px;
                 border-radius: 10px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Sombra igual à da página de cadastro */
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
                 max-width: 400px;
                 width: 100%;
             }
@@ -48,7 +48,7 @@
             .container input[type="submit"] {
                 width: 100%;
                 padding: 15px;
-                background-color: #28a745; /* Cor do botão igual ao da página de cadastro */
+                background-color: #28a745;
                 color: white;
                 border: none;
                 border-radius: 8px;
@@ -57,7 +57,7 @@
                 transition: background-color 0.3s ease;
             }
             .container input[type="submit"]:hover {
-                background-color: #218838; /* Cor de hover igual ao da página de cadastro */
+                background-color: #218838;
             }
             .signup-link {
                 text-align: center;
@@ -65,12 +65,17 @@
                 font-size: 16px;
             }
             .signup-link a {
-                color: #007bff; /* Cor do link igual ao da página de cadastro */
+                color: #007bff;
                 text-decoration: none;
                 font-weight: bold;
             }
             .signup-link a:hover {
                 text-decoration: underline;
+            }
+            .error-message {
+                color: red;
+                text-align: center;
+                margin-bottom: 20px;
             }
         </style>
     </head>
@@ -78,6 +83,13 @@
 
         <div class="container">
             <h2>Login</h2>
+            {% if messages %}
+                <div class="error-message">
+                    {% for message in messages %}
+                        {{ message }}
+                    {% endfor %}
+                </div>
+            {% endif %}
             <form action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
                 <label for="nome">Nome de Usuário</label>
@@ -89,7 +101,7 @@
                 <input type="submit" value="Logar">
 
                 <div class="signup-link">
-                    <p>Ainda não tem uma conta? <a href="/auth/cadastro/">Cadastre-se</a></p>
+                    <p>Ainda não tem uma conta? <a href="{% url 'cadastro' %}">Cadastre-se</a></p>
                 </div>
             </form>
         </div>
