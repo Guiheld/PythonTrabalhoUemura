@@ -1,33 +1,47 @@
 {% block content %}
   <div class="container">
     <div class="header">
-      <h2>Minhas Tarefas</h2>
+      <h2>Todas as Tarefas</h2>
       <div class="header-actions">
-        <a href="{% url 'dashboard' %}" class="btn btn-create">Dashboard</a>
-        <a href="{% url 'criar_tarefa' %}" class="btn btn-create">Criar nova tarefa</a>
+        <a href="{% url 'definir_tarefas' %}" class="btn btn-create">Voltar</a>
         <a href="{% url 'home' %}" class="btn btn-back">Sair</a>
       </div>
     </div>
 
     <div class="task-list">
-      {% for tarefa in tarefas %}
-        <div class="task-card">
-          <div class="task-header">
-            <strong>{{ tarefa.titulo }}</strong>
-            <span class="status {{ tarefa.status }}">{{ tarefa.get_status_display }}</span>
-          </div>
-          <div class="task-body">
-            <p>{{ tarefa.descricao }}</p>
-            <p><strong>Responsável:</strong> {{ tarefa.tarefa_atribuida }}</p>
-          </div>
-          <div class="task-footer">
-            <button class="btn btn-edit" onclick="window.location.href='{% url 'atualizar_tarefa' tarefa.id %}'">Editar</button>
-            <button class="btn btn-delete" onclick="window.location.href='{% url 'deletar_tarefa' tarefa.id %}'">Excluir</button>
-          </div>
-        </div>
-      {% empty %}
-        <div class="no-tasks">
-          Não há tarefas para mostrar.
+      {% for usuario, tarefas in tarefas_por_usuario.items %}
+        <div class="user-tasks">
+          <h3>{{ usuario.nome }}</h3>
+          {% if tarefas %}
+            <div class="task-list-inner">
+              {% for tarefa in tarefas %}
+                <div class="task-card">
+                  <div class="task-header">
+                    <strong>{{ tarefa.titulo }}</strong>
+                    <span class="status {{ tarefa.status }}">{{ tarefa.get_status_display }}</span>
+                  </div>
+                  <div class="task-body">
+                    <p>{{ tarefa.descricao }}</p>
+                    <p><strong>Responsável:</strong>
+                      {% if tarefa.tarefa_atribuida %}
+                        {{ tarefa.tarefa_atribuida.nome }}
+                      {% else %}
+                        Ninguém
+                      {% endif %}
+                    </p>
+                  </div>
+                  <div class="task-footer">
+                    <button class="btn btn-edit" onclick="window.location.href='{% url 'atualizar_tarefa' tarefa.id %}'">Editar</button>
+                    <button class="btn btn-delete" onclick="window.location.href='{% url 'deletar_tarefa' tarefa.id %}'">Excluir</button>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="no-tasks">
+              Não há tarefas para mostrar.
+            </div>
+          {% endif %}
         </div>
       {% endfor %}
     </div>
@@ -65,14 +79,6 @@
       transition: background-color 0.3s;
     }
 
-    .btn-dashboard {
-      background-color: #6c757d;
-    }
-
-    .btn-dashboard:hover {
-      background-color: #5a6268;
-    }
-
     .btn-create {
       background-color: #007bff;
     }
@@ -81,7 +87,28 @@
       background-color: #0056b3;
     }
 
+    .btn-back {
+      background-color: #6c757d;
+    }
+
+    .btn-back:hover {
+      background-color: #5a6268;
+    }
+
     .task-list {
+      margin-top: 20px;
+    }
+
+    .user-tasks {
+      margin-bottom: 30px;
+    }
+
+    .user-tasks h3 {
+      margin-bottom: 15px;
+      color: #333;
+    }
+
+    .task-list-inner {
       display: flex;
       flex-wrap: wrap;
       gap: 20px;
@@ -165,17 +192,10 @@
     }
 
     .no-tasks {
-      text-align: center;
+      text-align: left;
+      padding-left: 10px;
       font-size: 1.2em;
       color: #888;
-    }
-
-    .btn-back {
-      background-color: #6c757d;
-    }
-
-    .btn-back:hover {
-      background-color: #5a6268;
     }
   </style>
 {% endblock %}

@@ -64,7 +64,10 @@ def login_view(request):
 
 @login_required(login_url='/auth/login/')
 def dashboard(request):
-    return HttpResponse('plataforma')
+    usuarios = Usuarios.objects.all()
+    tarefas_por_usuario = {usuario: Tarefas.objects.filter(entrada_tarefa=usuario) for usuario in usuarios}
+    return render(request, 'dashboard.html', {'tarefas_por_usuario': tarefas_por_usuario})
+
 
 #----------------------------------------------------------------------------------------------------
 #config bloco de tarefas
@@ -123,11 +126,14 @@ def atualizar_tarefa(request, tarefa_id):
 
 @login_required(login_url='/auth/login/')
 def deletar_tarefa(request, tarefa_id):
-    tarefa = get_object_or_404(Tarefas, id=tarefa_id, criador=request.user)
+    usuario = get_object_or_404(Usuarios, id_usuario=request.user.id)
+    tarefa = get_object_or_404(Tarefas, id=tarefa_id, entrada_tarefa=usuario)
     if request.method == 'POST':
         tarefa.delete()
-        return redirect('definir_tarefa')
-    return render(request, 'tarefas/deletar_tarefa.html', {'tarefa': tarefa})
+        return redirect('definir_tarefas')
+
+    return render(request, 'confirmar_exclusao.html', {'tarefa': tarefa})
+
 
 
 
