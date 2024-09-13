@@ -30,9 +30,9 @@ INSTRUÇÕES
              Em ambas as páginas, é possível excluir uma tarefa. Ao clicar no botão vermelho, o usuário é redirecionado para uma página de confirmação. Nessa página, todas as informações sobre a tarefa são exibidas e são disponibilizadas duas opções: confirmar ou cancelar a exclusão.
 
 SOBRE O CODIGO:
-    O codigo segue o padrão do framework django, contendo as rotas em urls.py, regras de negocio em views.py e os templates html no diretorio /templates/. 
+      O codigo segue o padrão do framework django, contendo as rotas em urls.py, regras de negocio em views.py e os templates html no diretorio /templates/. 
     
-  Autenticação 
+    1. Autenticação 
   
       A função de cadastro do sistema utiliza tanto o modelo padrão do Django (User) quanto um modelo personalizado (Usuarios). O modelo padrão do Django é usado para uma implementação rápida e segura, aproveitando as funcionalidades prontas do framework. 
     Por outro lado, o modelo personalizado permite a customização necessária para atender a requisitos específicos do projeto.
@@ -42,7 +42,7 @@ SOBRE O CODIGO:
     
   Gerenciamento de Tarefas (Criação, Remoção, Edição e Visualização)
   
-    1. Visualização
+    2. Visualização
         Após a autenticação, o usuário é redirecionado do login para a função "definir_tarefa", onde são aplicadas as regras de negócios da página "Minhas Tarefas". 
       Nessa função, o sistema busca o objeto do usuário atualmente logado e suas tarefas (aquelas atribuídas a ele, e não as criadas por ele).
       Em seguida, a página HTML é renderizada. Um loop é utilizado para criar um cartão para cada tarefa, listando seus dados. 
@@ -51,15 +51,15 @@ SOBRE O CODIGO:
         A função dashboard pode ser acessada a partir da página "Minhas Tarefas" através de um botão. Nessa função, são buscados todos os usuários e criado um dicionário que mapeia cada usuário para as suas tarefas. 
       Em seguida, a página HTML é renderizada, que é semelhante à página "Minhas Tarefas".
 
-    2. Criação
+    3. Criação
         A função de criação de tarefas utiliza um formulário definido em formulario.py. Após o usuário preenchê-lo, é criado um objeto de tarefa e o usuário logado é buscado para finalizar a criação da nova tarefa.
       Para criar o formulário, é realizado um query para buscar todos os usuários e uma lista de possiveis valores para "status", o que popula o campo de opções para selecionar o responsável e o status atual da tarefa pela nova tarefa.
       
-    3. Exclusão
+    4. Exclusão
         A função de exclusão recebe como parâmetro o id da tarefa a ser deletada. Então, a tarefa é buscada e deletada.
       A diferença entre as funções "deletar_tarefa" e "deletar_tarefa_dashboard" é que na função "deletar_tarefa_dashboard" o usuário logado não é buscado.
       
-    4. Atualizar/Editar
+    5. Atualizar/Editar
        A função de editar/atualizar a tarefa foi feita com a lógica semelhante a de exclusão, porém invez de deletar, o usuario é encaminhado para o formulario, onde ele é preenchido novamente e então as alterações são salvas.
       A única diferença entre "atualizar_tarefa" e "atualizar_tarefa_dashboard" também é a mesma que em exclusão, em "atualizar_tarefa_dashboard" não tem uma busca pelo usuario.
 
