@@ -37,8 +37,11 @@ def cadastro(request):
 
         # Cria e salva o novo usuário
         senha_hash = make_password(senha)  # Hash da senha
-        user = Usuarios(nome=nome, email=email, senha=senha_hash)
+        user = Usuarios(nome=nome, email=email, senha=senha_hash) # cadastra modelo personalizado do models
         user.save()
+        user_django = User(username=nome, email=email) # cadastra user padrao do django
+        user_django.set_password(senha)
+        user_django.save()
         return redirect('login')
 
 
