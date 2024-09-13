@@ -67,7 +67,7 @@ def login_view(request):
 @login_required(login_url='/auth/login/')
 def dashboard(request):
     usuarios = Usuarios.objects.all()
-    tarefas_por_usuario = {usuario: Tarefas.objects.filter(entrada_tarefa=usuario) for usuario in usuarios}
+    tarefas_por_usuario = {usuario: Tarefas.objects.filter(tarefa_atribuida=usuario) for usuario in usuarios}
     return render(request, 'dashboard.html', {'tarefas_por_usuario': tarefas_por_usuario})
 
 
@@ -79,7 +79,7 @@ def definir_tarefa(request):
     redirect_url = request.session.pop('redirect_url', None) # Recupera o URL de destino da sessão se existir
     usuario_id = request.user.id
     usuario = Usuarios.objects.get(id_usuario=request.user.id)
-    tarefas = Tarefas.objects.filter(entrada_tarefa=usuario_id)
+    tarefas = Tarefas.objects.filter(tarefa_atribuida=usuario_id)
     if redirect_url:
         return HttpResponseRedirect(redirect_url)
 
