@@ -10,7 +10,19 @@ Integrantes do grupo:
 
 INSTRUÇÕES
 
-  1. Cadastro de Usuários + Login
+
+  Após importar o projeto, navegue pelo terminal em sua IDE até o diretório "TrabalhoUemura" e execute os seguintes comandos para a migração
+    1. python manage.py makemigrations
+    2. python manage.py migrate
+
+  Em seguida, execute o comando abaixo para rodar o projeto 
+       python manage.py runserver
+
+  Certifique-se que voce possue o framework Django baixado, caso nao, rode o seguinte comando
+       pip install django
+
+
+  1. Cadastro de Usuários + Logina
          Ao acessar a URL do projeto, o usuário é redirecionado para a tela de login. Caso o usuário não possua uma conta, há um link disponível abaixo para a página de cadastro.
        Para se cadastrar, é necessário preencher os campos Nome, Email e Senha. Após concluir o cadastro, o usuário é redirecionado novamente para a tela de login, onde poderá inserir suas credenciais e ser autenticado.
 
