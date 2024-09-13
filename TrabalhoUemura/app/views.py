@@ -74,18 +74,14 @@ def dashboard(request):
 
 @login_required(login_url='/auth/login/')
 def definir_tarefa(request):
-    # Recupera o URL de destino da sessão se existir
-    redirect_url = request.session.pop('redirect_url', None)
-
-    usuario_id = request.user.id  # Obtém o ID do usuário logado
+    redirect_url = request.session.pop('redirect_url', None) # Recupera o URL de destino da sessão se existir
+    usuario_id = request.user.id
+    usuario = Usuarios.objects.get(id_usuario=request.user.id)
     tarefas = Tarefas.objects.filter(entrada_tarefa=usuario_id)
-
-    # Pode usar o redirect_url se precisar redirecionar após a renderização
     if redirect_url:
         return HttpResponseRedirect(redirect_url)
 
-    return render(request, 'definir_tarefa.html/', {'tarefas': tarefas})
-
+    return render(request, 'definir_tarefa.html/', {'tarefas': tarefas, 'usuario' : usuario})
 
 
 @login_required(login_url='/auth/login/')
@@ -123,6 +119,19 @@ def atualizar_tarefa(request, tarefa_id):
 
     return render(request, 'formulario_tarefas.html', {'form': form})
 
+@login_required(login_url='/auth/login/')
+def atualizar_tarefa_dashboard(request, tarefa_id):
+    tarefa = get_object_or_404(Tarefas, id=tarefa_id)
+    if request.method == 'POST':
+        form = Formulario_de_tarefas(request.POST, instance=tarefa)
+        if form.is_valid():
+            form.save()
+            return redirect('definir_tarefas')
+    else:
+        form = Formulario_de_tarefas(instance=tarefa)
+
+    return render(request, 'formulario_tarefas.html', {'form': form})
+
 
 @login_required(login_url='/auth/login/')
 def deletar_tarefa(request, tarefa_id):
@@ -130,11 +139,18 @@ def deletar_tarefa(request, tarefa_id):
     tarefa = get_object_or_404(Tarefas, id=tarefa_id, entrada_tarefa=usuario)
     if request.method == 'POST':
         tarefa.delete()
-        return redirect('definir_tarefas')
+        return redirect('dashboard')
 
     return render(request, 'confirmar_exclusao.html', {'tarefa': tarefa})
 
+@login_required(login_url='/auth/login/')
+def deletar_tarefa_dashboard(request, tarefa_id):
+    tarefa = get_object_or_404(Tarefas, id=tarefa_id)
+    if request.method == 'POST':
+        tarefa.delete()
+        return redirect('dashboard')
 
+    return render(request, 'confirmar_exclusao.html', {'tarefa': tarefa})
 
 
 

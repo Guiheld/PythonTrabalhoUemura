@@ -31,9 +31,10 @@
                     </p>
                   </div>
                   <div class="task-footer">
-                    <button class="btn btn-edit" onclick="window.location.href='{% url 'atualizar_tarefa' tarefa.id %}'">Editar</button>
-                    <button class="btn btn-delete" onclick="window.location.href='{% url 'deletar_tarefa' tarefa.id %}'">Excluir</button>
+                    <button class="btn btn-edit" onclick="window.location.href='{% url 'atualizar_tarefa_dashboard' tarefa.id %}'">Editar</button>
+                    <button class="btn btn-delete" onclick="window.location.href='{% url 'deletar_tarefa_dashboard' tarefa.id %}'">Excluir</button>
                   </div>
+                  <p class="created-by"><b>Criado Por:</b> {{ tarefa.entrada_tarefa }}</p>
                 </div>
               {% endfor %}
             </div>
@@ -59,7 +60,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
       border-bottom: 2px solid #eee;
       padding-bottom: 10px;
     }
@@ -119,10 +119,12 @@
       border: 1px solid #ddd;
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 15px;
+      padding: 10px;
       width: calc(50% - 20px);
       box-sizing: border-box;
-      transition: box-shadow 0.3s;
+      position: relative; /* Necessário para o posicionamento absoluto do <p> */
+      display: flex;
+      flex-direction: column;
     }
 
     .task-card:hover {
@@ -133,7 +135,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
     }
 
     .task-header .status {
@@ -197,5 +198,14 @@
       font-size: 1.2em;
       color: #888;
     }
+
+    .created-by {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      color: #6c757d; /* Cor cinza discreta */
+      font-size: 0.9em;
+    }
+
   </style>
 {% endblock %}

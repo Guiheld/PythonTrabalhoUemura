@@ -8,7 +8,7 @@
         <a href="{% url 'home' %}" class="btn btn-back">Sair</a>
       </div>
     </div>
-
+    <h4 align="center"> Bem vindo {{ usuario.nome }} !</h4>
     <div class="task-list">
       {% for tarefa in tarefas %}
         <div class="task-card">
@@ -18,12 +18,13 @@
           </div>
           <div class="task-body">
             <p>{{ tarefa.descricao }}</p>
-            <p><strong>Responsável:</strong> {{ tarefa.tarefa_atribuida }}</p>
+            <p><b>Responsável:</b> {{ tarefa.tarefa_atribuida }}</p>
           </div>
           <div class="task-footer">
             <button class="btn btn-edit" onclick="window.location.href='{% url 'atualizar_tarefa' tarefa.id %}'">Editar</button>
             <button class="btn btn-delete" onclick="window.location.href='{% url 'deletar_tarefa' tarefa.id %}'">Excluir</button>
           </div>
+          <p class="created-by"><b>Criado Por:</b> {{ tarefa.entrada_tarefa }}</p>
         </div>
       {% empty %}
         <div class="no-tasks">
@@ -39,6 +40,7 @@
       margin: 0 auto;
       padding: 20px;
       font-family: Arial, sans-serif;
+      position: relative; /* Importante para o posicionamento absoluto */
     }
 
     .header {
@@ -95,7 +97,9 @@
       padding: 15px;
       width: calc(50% - 20px);
       box-sizing: border-box;
-      transition: box-shadow 0.3s;
+      position: relative; /* Necessário para o posicionamento absoluto do <p> */
+      display: flex;
+      flex-direction: column;
     }
 
     .task-card:hover {
@@ -106,7 +110,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
+
     }
 
     .task-header .status {
@@ -129,6 +133,7 @@
 
     .task-body {
       margin-bottom: 15px;
+      flex: 1; /* Permite que o conteúdo da tarefa se expanda */
     }
 
     .task-footer {
@@ -176,6 +181,14 @@
 
     .btn-back:hover {
       background-color: #5a6268;
+    }
+
+    .created-by {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      color: #6c757d; /* Cor cinza discreta */
+      font-size: 0.9em;
     }
   </style>
 {% endblock %}
